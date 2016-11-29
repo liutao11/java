@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>client</title>
+    <style>
+        .button{border-radius: 4px; background: #2C2C2C;height: 30px;width: 150px;line-height: 30px;text-align: center;color: #ffffff}
+    </style>
+</head>
+<script src="/views/js/jquery-3.1.0.min.js"></script>
+<body>
+    <div class="button">get</div>
+
+</body>
+<script>
+    $(".button").click(function(){
+        $.post("/ClientGet/?aa=44",{"data":"111"},function(data){
+            alert(data);
+        });
+    });
+</script>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>充值测试</title>
+</head>
+<body>
+<style>
+    *{font-size: 14px;color:#2C2C2C }
+    .title{font-size: 18px;height: 40px;line-height: 40px;}
+    .inputDiv{clear: both;height: 30px;}
+    .inputDiv_title{float: left;width: 150px;height: 30px;line-height: 30px;text-align: right }
+    .inputDiv input{display: block;float: left;height: 30px;width: 250px; border:none;border-bottom: 1px dashed #cccccc}
+    .submit{background: #0044cc;width: 100px;height: 30px;border-radius: 4px;color: #ffffff;font-size: 16px;line-height: 30px;font-weight: 600;text-align: center}
+    .showTitle{color: #0044cc;width: 100px;height: 30px;border-radius: 4px;background: #cccccc;font-size: 16px;line-height: 30px;font-weight: 600;text-align: center}
+    .show{border: 1px solid #cccccc;margin-top: 20px;width: 500px;box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);display: none}
+    .showState{font-size: 14px;color: #0044cc;line-height: 30px;height: 30px;padding-left: 10px;}
+    .showStateTitle{height: 40px;line-height: 40px;font-size: 18px;background: #cccccc}
+    .objectName{font-size: 12px;line-height: 30px;height: 30px;margin-left: 10px; }
+</style>
+<div class="title">已经有的项目列表</div>
+<div>
+    <{$objectShow}>
+</div>
+
+<div class="title"><{$AName}></div>
+
+<div class="inputDiv">
+    <div class="inputDiv_title">项目名:</div>
+    <input title="text" class="textInput">
+</div>
+<div class="inputDiv">
+    <div class="inputDiv_title">服务器名:</div>
+    <input title="text" class="textInput">
+</div>
+<div class="inputDiv">
+    <div class="inputDiv_title">游戏数据库:</div>
+    <input title="text" class="gamedb">
+</div>
+
+<div class="inputDiv">
+    <div class="inputDiv_title">游戏日志库:</div>
+    <input title="text" class="logdb">
+</div>
+
+<div class="inputDiv" style="margin-top: 20px;height: 50px;">
+    <div class="submit">检查充值</div>
+</div>
+<div class="showTitle" style="margin-top: 60px;">测试结果</div>
+<div class="show"></div>
+<script src="/views/js/jquery-3.1.0.min.js"></script>
+<script language="JavaScript">
+    $(function(){
+        $(".submit").on("click",function(){
+            var object =$(".textInput").eq(0).val();
+            var server=$(".textInput").eq(1).val();
+            var gamedb=$(".gamedb").val();
+            var logdb=$(".logdb").val();
+            if(object!='' && server!='' && logdb!='' && gamedb!=""){
+                $.get("/AworkerGet/",{"object":object,"server":server,"gamedb":gamedb,"logdb":logdb},function(data){
+                    var obj=$.parseJSON(data);
+                    var showHtml="";
+                    if(obj.state==0) {
+                        showHtml += "<div class='showStateTitle'>整体结果：<span style='color: green'>通过</span></div>";
+                    }else{
+                        showHtml += "<div class='showStateTitle'>整体结果：<span style='color: red'>测试未通过</span></div>";
+                    }
+                    if(obj.mysqlConnection==0){
+                        showHtml += "<div class='showState'>链接充值mysql数据库：<span style='color: green'>连通</span></div>";
+                    }else{
+                        showHtml += "<div class='showState'>链接充值mysql数据库：<span style='color: red'>未连通</span></div>";
+                    }
+                    if(obj.serverLink==0){
+                        showHtml += "<div class='showState'>该服务器名是否在数据库：<span style='color: green'>有</span></div>";
+                    }else{
+                        showHtml += "<div class='showState'>该服务器名是否在数据库：<span style='color: red'>没有</span></div>";
+                    }
+                    if(obj.serverSet==0){
+                        showHtml += "<div class='showState'>该服务器名信息是否完整：<span style='color: green'>完整</span></div>";
+                    }else{
+                        showHtml += "<div class='showState'>该服务器名信息是否完整：<span style='color: red'>不完整</span></div>";
+                    }
+                    if(obj.gamedb==0){
+                        showHtml += "<div class='showState'>游戏数据库是否连通：<span style='color: green'>连通</span></div>";
+                    }else{
+                        showHtml += "<div class='showState'>游戏数据库是否连通：<span style='color: red'>不连通</span></div>";
+                    }
+                    if(obj.insert==0){
+                        showHtml += "<div class='showState'>游戏数据库插入数据：<span style='color: green'>正常</span></div>";
+                    }else{
+                        showHtml += "<div class='showState'>游戏数据库插入数据：<span style='color: red'>不连通</span></div>";
+                    }
+                    if(obj.del==0){
+                        showHtml += "<div class='showState'>游戏数据库删除测试数据：<span style='color: green'>正常</span></div>";
+                    }else{
+                        showHtml += "<div class='showState'>游戏数据库删除测试数据：<span style='color: red'>不连通</span></div>";
+                    }
+                    if(obj.socket==0){
+                        showHtml += "<div class='showState'>telnet端口：<span style='color: green'>正常</span></div>";
+                    }else{
+                        showHtml += "<div class='showState'>telnet端口：<span style='color: red'>不连通</span></div>";
+                    }
+
+                    if(obj.gamedbState==0){
+                        showHtml += "<div class='showState'>游戏信息库连接：<span style='color: green'>正常</span></div>";
+                    }else{
+                        showHtml += "<div class='showState'>游戏信息库连接：<span style='color: red'>不正常</span></div>";
+                    }
+                    if(obj.logdbState==0){
+                        showHtml += "<div class='showState'>游戏日志信息库连接：<span style='color: green'>正常</span></div>";
+                    }else{
+                        showHtml += "<div class='showState'>游戏日志信息库连接：<span style='color: red'>不正常</span></div>";
+                    }
+
+
+
+                    $(".show").html(showHtml).show();
+
+                })
+            }else{
+                alert("参数不全！");
+            }
+        })
+    });
+</script>
+
+</body>
+</html>

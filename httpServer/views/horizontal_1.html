@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Blindify jQuery plugin - horizontal demo #1</title>
+    <meta name="description" content="Blindify jQuery plugin - horizontal demo #1" />
+    <link rel="stylesheet" href="css/blindify.min.css" media="all" />
+    <link rel="stylesheet" href="demo.css" media="all" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="js/jquery.blindify.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#blindify').blindify({
+                numberOfBlinds: 8,
+                margin: 10,
+                gapHeight: 140,
+                orientation: 'horizontal'
+            });
+        });
+    </script>
+</head>
+<body>
+    <article class="container">
+        <h1>Blindify</h1>
+        <nav class="top">
+            <ul>
+                <li><a href="index.html">Vertical 1</a></li>
+                <li><a href="vertical_2.html">Vertical 2</a></li>
+                <li><a href="horizontal_1.html" class="active">Horizontal 1</a></li>
+                <li><a href="horizontal_2.html">Horizontal 2</a></li>
+            </ul>
+        </nav>
+        <section id="blindify">
+            <ul>
+                <li><img src="images/photo_1.jpg" alt="" /></li>
+                <li><img src="images/photo_2.jpg" alt="" /></li>
+                <li><img src="images/photo_3.jpg" alt="" /></li>
+                <li><img src="images/photo_4.jpg" alt="" /></li>
+            </ul>
+        </section>
+        
+    </article>
+<div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';">
+<p>适用浏览器：360、FireFox、Chrome、Safari、Opera、傲游、搜狗、世界之窗. 不支持IE8及以下浏览器。</p>
+<p>来源：<a href="http://sc.chinaz.com/" target="_blank">站长素材</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>37wanCDN推送</title>
+</head>
+<body>
+<style>
+    .textdiv{width: 800px;height: 450px;border: 1px solid #cccccc;margin-top: 10px;line-height: 20px;}
+    .submit{background: #0044cc;width: 100px;height: 30px;border-radius: 4px;color: #ffffff;font-size: 16px;line-height: 30px;font-weight: 600;text-align: center;margin-top: 10px;}
+    .inputDiv{clear: both;height: 30px;margin-top: 10px;}
+    .title{font-size: 18px;height: 40px;line-height: 40px;background: #cccccc}
+    .inputDiv_title{float: left;width: 100px;height: 30px;line-height: 30px;text-align: right;font-size: 12px; }
+    .inputDiv_select{height: 30px;width: 200px;line-height: 30px;margin-left: 10px;border: 1px solid #cccccc;}
+    .showTitle{color: #0044cc;width: 100px;height: 30px;border-radius: 4px;background: #cccccc;font-size: 16px;line-height: 30px;font-weight: 600;text-align: center}
+    .show{border: 1px solid #cccccc;margin-top: 20px;width: 500px;box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);display: none}
+    .showState{font-size: 14px;color: #0044cc;line-height: 30px;height: 30px;padding-left: 10px;}
+    .showStateTitle{height: 40px;line-height: 40px;font-size: 18px;background: #cccccc}
+    .objectName{font-size: 12px;line-height: 30px;height: 30px;margin-left: 10px; }
+    .message{font-size: 12px;line-height: 30px;height: 30px;color: #cccccc}
+    .history_list{height: 30px;line-height: 30px ;border-bottom: 1px dashed #cccccc;margin-left: 20px;font-size: 12px;}
+    .left{width: 900px;float: left;}
+    .right{width: 600px;float: left}
+</style>
+<div class="title">37wan--龙之战神 CDN推送</div>
+<div class="left">
+    <div class="inputDiv">
+        <div class="inputDiv_title">类 型:</div>
+        <select class="inputDiv_select">
+            <option value="1">推送文件</option>
+            <option value="2">推送目录</option>
+        </select>
+    </div>
+
+    <textarea class="textdiv"></textarea>
+    <div class="message">
+        *注意：多个地址，换行就可以了
+    </div>
+
+    <div class="submit">推送</div>
+
+    <div class="showTitle" style="margin-top: 60px;">操作结果</div>
+    <div class="show"></div>
+</div>
+<div class="right">
+    <div>http://res.lzzs.37wan.com/MClientRes/Update/</div>
+    <div>http://res.lzzs.37wan.com/yeduan/</div>
+    <div>http://res.lzzs.37wan.com/MClientRes/Update/List.txt</div>
+    <div>http://res.lzzs.37wan.com/MClientRes/</div>
+
+
+    <div>推送历史记录：</div>
+    <div><{$historylist}></div>
+</div>
+</body>
+</html>
+<script src="/views/js/jquery-1.7.2.min.js"></script>
+<script language="JavaScript">
+    $(function() {
+        var sendState=0;
+        $(".submit").on("click", function () {
+            var textdiv =$(".textdiv").eq(0).val();
+            var style=$(".inputDiv_select").eq(0).val();
+
+            if(textdiv!='' && style!=''){
+                if(sendState==0) {
+                    sendState = 1;
+                    $(this).html('发送中...');
+                    $(this).css({"background": "#616161"});
+                    $.get("/BworkerGet/", {
+                        "urls": textdiv,
+                        "style": style,
+                        "unid": new Date().getTime()
+                    }, function (data) {
+                        var jsonobject = $.parseJSON(data);
+                        var showHtml="";
+                        if(jsonobject.code==0) {
+                            showHtml += "<div class='showStateTitle'>整体结果：<span style='color: green'>通过</span></div>";
+                        }else{
+                            showHtml += "<div class='showStateTitle'>整体结果：<span style='color: red'>测试未通过</span></div>";
+                            showHtml += "<div class='showState'>操作失败原因：<span style='color: red'>"+jsonobject.message+"</span></div>";
+                        }
+                        $(".show").html(showHtml).show();
+
+                        $(this).html('推送');
+                        $(this).css({"background": "#0044cc"});
+                        sendState = 0;
+                    })
+                }else{
+                    alert('超过过于频繁！');
+                }
+            }else{
+                alert('参数不完整！');
+            }
+        })
+    })
+
+</script>
